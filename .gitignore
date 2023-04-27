@@ -1,2 +1,5 @@
 node_modules
 .env
+
+src/s3-upload-no-drain.ts
+s3-download-chunk-split.ts

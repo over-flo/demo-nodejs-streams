@@ -37,7 +37,6 @@ class ReadableS3 extends Readable {
     const chunk = await this.reader.read();
     const te = new TextDecoder();
     if (!chunk.done) {
-      //this.push(` <Chunk> ${te.decode(chunk.value)} </Chunk> `);
       this.push(`${te.decode(chunk.value)}`);
     } else {
       this.push(null);
@@ -50,11 +49,7 @@ class ReadableS3 extends Readable {
   await readableS3.init();
 
   readableS3
-    .pipe(es.split())
-    // .pipe(es.map((line:string, cb :any) => {
-    //   cb(null, `${line}`);
-    //   return true;
-    // }))
+    // no es.split
     .pipe(es.join('</chunk>\n\n<chunk>'))
     .pipe(process.stdout);
 })();

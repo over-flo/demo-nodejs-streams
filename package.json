@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --watch",
-    "naive-disk": "ts-node src/naive-disk.ts",
-    "01": "ts-node src/basics/duplex.ts",
-    "02": "node -r ts-node/register --max-old-space-size=500 src/use-case/s3-upload.ts",
-    "03": "ts-node src/use-case/download-csv2.ts",
+
+    "01": "ts-node src/s3-upload-drain.ts",
+    "02": "sed \"s|await once(passThroughStream, 'drain');|// await once(passThroughStream, 'drain'); |g\" src/s3-upload-drain.ts > src/s3-upload-no-drain.ts && node -r ts-node/register --max-old-space-size=512 src/s3-upload-no-drain.ts",    
+    "03": "ts-node src/object-mode.ts",
+    "04": "ts-node src/s3-download-chunk.ts",
+    "05": "sed \"s|    // no es.split|    .pipe(es.split())|g\" src/s3-download-chunk.ts > src/s3-download-chunk-split.ts && ts-node src/s3-download-chunk-split.ts",
     "lint": "eslint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

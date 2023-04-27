@@ -47,7 +47,7 @@ createSimpleCsv(passThroughStream, () => {
 });
 
 async function createSimpleCsv(ws: NodeJS.WritableStream, onEnd:()=> void) {
-  let counter = 100000;
+  let counter = 50 * 1000;
   const csvStream = csv.format({ headers: true });
   csvStream.pipe(ws).on('end', () => onEnd());
 
@@ -56,7 +56,7 @@ async function createSimpleCsv(ws: NodeJS.WritableStream, onEnd:()=> void) {
       // ------------------------------------------- //
       // ------------------------------------------- //
       // eslint-disable-next-line no-await-in-loop
-      // await once(passThroughStream, 'drain');
+      await once(passThroughStream, 'drain');
       // ------------------------------------------- //
       // ------------------------------------------- //
     }
