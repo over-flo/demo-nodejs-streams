@@ -2,8 +2,9 @@ import { S3 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import * as csv from '@fast-csv/format';
 import * as dotenv from 'dotenv';
-import { PassThrough, Stream } from 'stream';
 import { once } from 'events';
+import fs from 'fs';
+import { PassThrough, Stream } from 'stream';
 
 dotenv.config();
 
@@ -38,48 +39,36 @@ function sendToS3(writeStream:PassThrough, filename:string) {
     });
 }
 
-const writeStream = new Stream.PassThrough();
-sendToS3(writeStream, 'test01.csv');
+const passThroughStream = new Stream.PassThrough();
+sendToS3(passThroughStream, 'test01.csv');
 
-createSimpleCsv(writeStream, () => {
-  writeStream.end();
+createSimpleCsv(passThroughStream, () => {
+  passThroughStream.end();
 });
 
 async function createSimpleCsv(ws: NodeJS.WritableStream, onEnd:()=> void) {
-  let counter = 100;
+  let counter = 100000;
   const csvStream = csv.format({ headers: true });
   csvStream.pipe(ws).on('end', () => onEnd());
 
   do {
-    // csvStream.write({ key: counter, value: makeid(100) });
     if (!csvStream.write({ key: counter, value: makeid(1024) })) {
-      await once(writeStream, 'drain');
+      // ------------------------------------------- //
+      // ------------------------------------------- //
+      // eslint-disable-next-line no-await-in-loop
+      // await once(passThroughStream, 'drain');
+      // ------------------------------------------- //
+      // ------------------------------------------- //
     }
 
     if (counter % 10000 === 0) {
       console.log('10000 were written');
-      // mem();
+      mem();
     }
     counter -= 1;
   } while (counter > 0);
   csvStream.end();
 }
-
-const asyncIterable = {
-  [Symbol.asyncIterator]() {
-    return {
-      i: 0,
-      next() {
-        if (this.i < 50000) {
-
-          return Promise.resolve({ done: false });
-        }
-
-        return Promise.resolve({ done: true });
-      },
-    };
-  },
-};
 
 function makeid(length:number) {
   let result = '';
@@ -89,4 +78,8 @@ function makeid(length:number) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+function mem() {
+  const used = process.memoryUsage().heapUsed / 1024 / 1024;
+  console.log(`Memory usage : ${used} MB`);
 }

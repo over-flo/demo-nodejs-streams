@@ -81,6 +81,9 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off', // idac habits
         '@typescript-eslint/interface-name-prefix': 'off', // idac habits
         '@typescript-eslint/explicit-function-return-type': 'off', // idac habits
+        'no-console': 'off',
+        'class-methods-use-this': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
       },
     },
     {

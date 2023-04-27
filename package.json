@@ -6,7 +6,9 @@
   "scripts": {
     "build": "tsc --watch",
     "naive-disk": "ts-node src/naive-disk.ts",
-    "step01": "ts-node src/readable-stream.ts",
+    "01": "ts-node src/basics/duplex.ts",
+    "02": "node -r ts-node/register --max-old-space-size=500 src/use-case/s3-upload.ts",
+    "03": "ts-node src/use-case/download-csv2.ts",
     "lint": "eslint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +21,7 @@
     "@fast-csv/format": "^4.3.5",
     "@types/event-stream": "^4.0.0",
     "assert": "^2.0.0",
+    "async-mutex": "^0.4.0",
     "athena-express": "^7.1.5",
     "aws-sdk": "^2.1306.0",
     "crypto-random-string": "^5.0.0",
@@ -28,7 +31,8 @@
     "exceljs": "^4.3.0",
     "memory-streams": "^0.1.3",
     "stream": "^0.0.2",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "xor-cryptor": "^1.0.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
